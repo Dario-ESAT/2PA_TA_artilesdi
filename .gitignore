@@ -33,6 +33,7 @@
 
 *.pdb
 *ilk
+*.ini
 
 .vs
 .vscode

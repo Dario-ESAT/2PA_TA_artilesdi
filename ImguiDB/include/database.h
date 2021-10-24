@@ -21,7 +21,7 @@ private:
   bool Close();
 
   void InitializeTables();
-  void CountTables();
+  void SetNumberOfTables();
 
   static int NumberOfTablesCallback(void *number_of_tables, int argc, 
                                     char **argv, char **azColName);

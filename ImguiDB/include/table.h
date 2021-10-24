@@ -10,22 +10,24 @@
 class Table {
 public:
   Row *rows_;
-  char **row_names_;
+  char **cols_names_;
   char *table_name_;
   DataTypes *types_;
   int number_of_rows_;
   int number_of_cols_;
 
-  Table(sqlite3 *db);
+  Table();
+  void Innit(sqlite3 *db, char *name);
   ~Table();
 private:
   int GetNumberOfCols(sqlite3 *db);
   int GetNumberOfRows(sqlite3 *db);
 
-  void SetTypes(sqlite3 *db);
+  void SetTypesAndNames(sqlite3 *db);
 
-  std::string aux;
   DataTypes GetTypeFromString(std::string string);
+  int GetVarcharMaxFromString(std::string string);
+
 
   static int NumberOfColsCallback(void *number_of_cols, int argc, char **argv, 
                                   char **azColName);

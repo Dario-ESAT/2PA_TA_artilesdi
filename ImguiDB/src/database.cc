@@ -7,8 +7,8 @@ Database::Database(char *db_path) {
   Open();
   
   number_of_tables_ = 0;
-  CountTables();
-  // InitializeTables();
+  SetNumberOfTables();
+  InitializeTables();
 }
 
 Database::~Database() {
@@ -16,17 +16,28 @@ Database::~Database() {
 }
 
 void Database::InitializeTables(){
-  
-  tables_ = (Table*) malloc(sizeof(Table) * number_of_tables_);
+  tables_ = new Table[number_of_tables_];
+  char *sql_stmt = "SELECT name FROM sqlite_master WHERE type='table'";
 
+  sqlite3_stmt *stmt;
+  sqlite3_prepare(db_, sql_stmt, -1, &stmt, NULL);
 
-  char *sql = "SELECT name FROM sqlite_master WHERE type='table'";
-  sqlite3_exec(db_, sql, InitializeTablesCallback, 0, 0);
+  int table_index = 0;
+  while (sqlite3_step(stmt) == SQLITE_ROW){
+    char *name = (char *) sqlite3_column_text(stmt,0);
+    printf("%s\n", name);
+    tables_[table_index].Innit(db_,name);
+    table_index++;
+    printf("%d\n",table_index);
+  }
+  printf("%s\n","OUT");
+  sqlite3_finalize(stmt);
+  free(sql_stmt);
 }
 
-void Database::CountTables(){
-
+void Database::SetNumberOfTables(){
   char *sql = "SELECT COUNT(name) FROM sqlite_master WHERE type='table'";
+
   sqlite3_exec(db_, sql, NumberOfTablesCallback, &number_of_tables_, 0);
 }
 
@@ -50,15 +61,9 @@ bool Database::Close () {
   return true;
 }
 
-int Database::NumberOfTablesCallback(void *number_of_tables, int argc, char **argv, 
-                          char **azColName){
+int Database::NumberOfTablesCallback(void *number_of_tables, int argc, 
+char **argv, char **azColName){
   int *number_of_tables_pointer = (int *) number_of_tables;
   *number_of_tables_pointer = atoi(argv[0]);
-  return 1;
-}
-
-int Database::InitializeTablesCallback(void *number_of_tables, int argc, char **argv, 
-                          char **azColName){
-
   return 1;
 }
