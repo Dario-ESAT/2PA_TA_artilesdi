@@ -23,10 +23,6 @@ private:
   void InitializeTables();
   void SetNumberOfTables();
 
-  static int NumberOfTablesCallback(void *number_of_tables, int argc, 
-                                    char **argv, char **azColName);
-  static int InitializeTablesCallback(void *number_of_cols, int argc,
-                                      char **argv, char **azColName);
 };
 
 

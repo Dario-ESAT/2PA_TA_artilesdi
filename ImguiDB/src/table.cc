@@ -57,7 +57,7 @@ void Table::SetTypesAndNames(sqlite3 *db) {
     char *col_name_aux = (char *) sqlite3_column_text(stmt,1);
     int col_name_size = strlen(col_name_aux);
 
-    cols_names_[col_intex] = (char *) malloc(sizeof(char) * (col_name_size + 1));
+    cols_names_[col_intex] = (char *) calloc(col_name_size + 1,sizeof(char));
     cols_names_[col_intex][0] = '\0';
 
     strcpy(cols_names_[col_intex],col_name_aux);
@@ -79,7 +79,7 @@ void Table::SetTypesAndNames(sqlite3 *db) {
   }
 
   sqlite3_finalize(stmt);
-  free(sql_stmt);
+  
 }
 
 int Table::GetNumberOfCols(sqlite3 *db){
@@ -110,7 +110,7 @@ int Table::GetNumberOfRows(sqlite3 *db) {
 
   int number = sqlite3_column_int(stmt,0);
   sqlite3_finalize(stmt);
-  free(sql_stmt);
+  
   return number;
 }
 

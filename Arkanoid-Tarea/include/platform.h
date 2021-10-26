@@ -12,7 +12,7 @@ class PlatformClass : public EntityClass{
   sf::Vector2i direction;
 
   public:
-  PlatformClass(sf::RectangleShape shape, int id, float speed, sf::Vector2i direction = sf::Vector2i(0,0), bool alive = true);
+  PlatformClass(sf::RectangleShape shape, float speed, sf::Vector2i direction = sf::Vector2i(0,0), bool alive = true);
 
   PlatformClass();
 #pragma region s-getter

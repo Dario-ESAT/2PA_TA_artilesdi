@@ -1,8 +1,7 @@
 #include "..\include\brick.h"
 
-Brick::Brick(sf::RectangleShape shape, int id, bool alive) {
+Brick::Brick(sf::RectangleShape shape, bool alive) {
   
-  this->id = id;
   this->alive = alive;
   this->shape = shape;
 }
@@ -15,10 +14,19 @@ BrickNode::BrickNode(Brick data){
   this->next = nullptr;
 }
 
-BrickList::BrickList() {
-  head = NULL;
+BrickNode::~BrickNode(){
+  if (next != nullptr) {
+    next->~BrickNode();
+  }
 }
-BrickList::~BrickList() {};
+
+BrickList::BrickList() {
+  head = nullptr;
+}
+
+BrickList::~BrickList() {
+  head->~BrickNode();
+};
 
 BrickNode* BrickList::getHead() {
   return this->head;
@@ -30,22 +38,15 @@ void BrickList::setHead(BrickNode* head) {
 void BrickList::addBrick(Brick data) {
   BrickNode* newnode = new BrickNode(data);
   
-  // printf("\n%d-> x: %2f",data.getId(), data.getShape().getPosition().x);
   newnode->next = head;
   head = newnode;
 
 };
 
 void BrickList::printBricks(sf::RenderWindow *window){
-  static bool x = true;
   for (BrickNode* current = head; current != nullptr; current = current->next) {
-    if (x) {
-      // printf("\n%d-> x: %2f y: %2f",current->data.getId(), current->data.getShape().getPosition().x, current->data.getShape().getPosition().y);
-    }
-    
     window->draw(current->data.getShape());
   }
-  x = false;
 }
 
 void BrickList::printBricksAlive(sf::RenderWindow *window){
@@ -56,3 +57,17 @@ void BrickList::printBricksAlive(sf::RenderWindow *window){
     }
   }
 }
+/* 
+void BrickList::deleteBricks(){
+
+  BrickNode *current;
+  while(current != nullptr){
+    BrickNode* current = head;
+    if(current->next != nullptr){
+      head = current->next;
+      current->~BrickNode();
+    } else {
+      head->~BrickNode();
+    }
+  }
+} */

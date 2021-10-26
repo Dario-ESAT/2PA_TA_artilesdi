@@ -2,6 +2,9 @@
 #define __GAME_H__ 1
 
 #include <SFML/Graphics.hpp>
+#include <fstream>
+
+using namespace std;
 
 #include "..\include\definitions.h"
 
@@ -9,9 +12,10 @@
 #include "..\include\brick.h"
 #include "..\include\platform.h"
 
-class Game{
+class Game {
   public:
   int lives, score;
+  Config config;
   
   BrickList brick_list;
   PlatformClass player;
@@ -25,11 +29,11 @@ class Game{
 
   bool Collision(hitbox first_item, hitbox second_item);
 
-  void buildBricks();
+  void BuildBricks(sf::Vector2u window_size);
 
-  void initPLatform();
+  void InitPLatform(sf::Vector2u window_size);
 
-  void initBall();
+  void InitBall();
 
   void BallBricksCollision();
 
@@ -40,6 +44,8 @@ class Game{
   void RestartLvL();
 
   void CheckLoss();
+
+  void ReadConfig();
 };
 
 #endif

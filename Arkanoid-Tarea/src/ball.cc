@@ -1,7 +1,7 @@
 #include "..\include\ball.h"
 #include "..\include\definitions.h"
 
-  BallClass::BallClass(int id, sf::RectangleShape shape, sf::Vector2i direction, float speed, bool alive){
+  BallClass::BallClass(sf::RectangleShape shape, sf::Vector2i direction, float speed, bool alive){
     this->shape = shape;
     this->alive = alive;
     this->speed = speed;

@@ -15,6 +15,7 @@ int main() {
   // strcat(sql,"table_name_");
   // strcat(sql,")");
   // printf("%s",sql);
+  printf("---%d---", sizeof(DataTypes));
   Database *database = new Database("../data/jardineria.db");
   printf("%s - Table Name",database->tables_[0].table_name_);
   printf("%d - Number of tables",database->number_of_tables_);

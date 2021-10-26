@@ -6,11 +6,8 @@
 
 
 class Brick : public EntityClass{
-  
-   protected:
-
    public:
-  Brick(sf::RectangleShape shape, int id, bool alive = true);
+  Brick(sf::RectangleShape shape, bool alive = true);
 
   Brick();
 };
@@ -41,6 +38,8 @@ class BrickList{
   void printBricks(sf::RenderWindow *window);
   
   void printBricksAlive(sf::RenderWindow *window);
+
+  void deleteBricks();
 
 };
 

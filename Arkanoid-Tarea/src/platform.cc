@@ -1,12 +1,10 @@
 #include "..\include\platform.h"
 
-PlatformClass::PlatformClass(sf::RectangleShape shape, int id, float speed, sf::Vector2i direction, bool alive){
+PlatformClass::PlatformClass(sf::RectangleShape shape, float speed, sf::Vector2i direction, bool alive){
   this->shape = shape;
   this->alive = alive;
   this->speed = speed;
   this->direction = direction;
-  this->id = id;
-  
 };
 PlatformClass::PlatformClass(){};
 #pragma region s-getter
@@ -27,7 +25,6 @@ void PlatformClass::setDirection(sf::Vector2i direction) {
   this->direction = direction;
 }
 #pragma endregion
-
 
 void PlatformClass::MovePlatform(){
   

@@ -10,7 +10,7 @@ class BallClass : public EntityClass{
   float speed;
 
   public:
-  BallClass(int id, sf::RectangleShape shape, sf::Vector2i direction = sf::Vector2i(0, 0), float speed = 0, bool alive = true);
+  BallClass(sf::RectangleShape shape, sf::Vector2i direction = sf::Vector2i(0, 0), float speed = 0, bool alive = true);
   
   BallClass();
 
