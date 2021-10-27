@@ -17,49 +17,52 @@ int main(int argc, char** argv){
   window.setFramerateLimit(30);
   window.getSize();
   Game game;
-  game.BuildBricks(window.getSize());
-  game.InitPLatform(window.getSize());
-  game.InitBall();
+  if (  game.ReadConfig()) {
+    game.BuildBricks(window.getSize());
+    game.InitPLatform(window.getSize());
+    game.InitBall();
 
-  while (window.isOpen()){
+    while (window.isOpen()){
 
-    sf::Event event;
-    while (window.pollEvent(event)){
-      if (event.type == sf::Event::Closed || 
-          sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
-        window.close();
+      sf::Event event;
+      while (window.pollEvent(event)){
+        if (event.type == sf::Event::Closed || 
+            sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)){
+          window.close();
+        }
       }
+      // ---- Input ------------
+
+      game.player.MovePlatform();
+      game.ball.MoveBall();
+
+      // ---------------------------
+
+      // ---- Update ---------------
+
+      game.BallBricksCollision();
+      game.PlatformBallCollision();
+      game.ball.CheckBoundaries();
+      game.CheckLoss();
+
+      // ---------------------------
+
+      window.clear();
+
+      // ---- Draw ------------------------
+
+      game.player.DrawPlatform(&window);
+      game.brick_list.printBricksAlive(&window);
+      game.ball.DrawBall(&window);
+      
+      // ----------------------------------
+
+      window.display();
+
     }
-    // ---- Input ------------
-
-    game.player.MovePlatform();
-    game.ball.MoveBall();
-
-    // ---------------------------
-
-    // ---- Update ---------------
-
-    game.BallBricksCollision();
-    game.PlatformBallCollision();
-    game.ball.CheckBoundaries();
-    game.CheckLoss();
-
-    // ---------------------------
-
-    window.clear();
-
-    // ---- Draw ------------------------
-
-    game.player.DrawPlatform(&window);
-    game.brick_list.printBricksAlive(&window);
-    game.ball.DrawBall(&window);
-    
-    // ----------------------------------
-
-    window.display();
-
+  } else {
+    printf("Error al abrir la base de datos");
   }
-
   return 0;
 }
 

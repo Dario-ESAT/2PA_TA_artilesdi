@@ -1,9 +1,10 @@
 #include "..\include\game.h"
 
+#include "..\deps\sqlite3\sqlite3.h"
+
 Game::Game() {
   lives = 3;
   score = 0;
-  ReadConfig();
 }
 
 int Clamp(int value, int min, int max){
@@ -16,113 +17,83 @@ int Clamp(int value, int min, int max){
   return value;
 }
 
-void Game::ReadConfig(){
-  
-  std::fstream config_file;
-  config_file.open("../data/config.txt", std::ios::in);
-
-  if(config_file.is_open()){
-    std::string line;
-    int i = 0;
-    while(std::getline(config_file, line)){ 
-      int start = line.find("=",0) + 1;
-      // volcado de todas las lineas en line
-      std::string value(line.substr(start));
-      value[value.find(";")] = '\0';
-
-      // printf("%s | %s",line.c_str(), value.c_str());
-      int value_int = atoi(value.c_str());
-
-      switch (i) {
-        case 0:
-          config.brick_rows = Clamp(value_int,3,20);
-          // printf(" : %d\n", config.brick_rows);
-          break;
-        case 1:
-          config.brick_cols = Clamp(value_int,2,15);
-          // printf(" : %d\n", config.brick_rows);
-          break;
-        case 2:
-          config.brick_offset = Clamp(value_int,0,10);
-          // printf(" : %d\n", config.brick_offset);
-          break;
-        case 3:
-          config.brick_spawn_start = Clamp(value_int,0,100);
-          // printf(" : %d\n", config.brick_spawn_start);
-          break;
-        case 4:
-          config.brick_spawn_end = Clamp(value_int, config.brick_spawn_start, 500);
-          // printf(" : %d\n", config.brick_spawn_end);
-          break;
-        case 5:
-          config.ball_width = Clamp(value_int,5,20);
-          // printf(" : %f\n", config.ball_width);
-          break;
-        case 6:
-          config.ball_height = Clamp(value_int,5,20);
-          // printf(" : %f\n", config.ball_height);
-          break;
-        case 7:
-          config.ball_speed = Clamp(value_int,1,20);
-          // printf(" : %f\n", config.ball_speed);
-          break;
-        case 8:
-          config.platform_width = Clamp(value_int,5,20);
-          // printf(" : %f\n", config.platform_width);
-          break;
-        case 9:
-          config.platform_height = Clamp(value_int,5,20);
-          // printf(" : %f\n", config.platform_height);
-          break;
-        case 10:
-          config.platform_speed = Clamp(value_int,1,20);
-          // printf(" : %f\n", config.platform_speed);
-          break;
-        case 11:
-          config.platform_r = Clamp(value_int,0,255);
-          // printf(" : %d\n", config.platform_r);
-          break;
-        case 12:
-          config.platform_g = Clamp(value_int,0,255);
-          // printf(" : %d\n", config.platform_g);
-          break;
-        case 13:
-          config.platform_b = Clamp(value_int,0,255);
-          // printf(" : %d\n", config.platform_b);
-          break;
-        case 14:
-          config.ball_r = Clamp(value_int,0,255);
-          // printf(" : %d\n", config.ball_r);
-          break;
-        case 15:
-          config.ball_g = Clamp(value_int,0,255);
-          // printf(" : %d\n", config.ball_g);
-          break;
-        case 16:
-          config.ball_b = Clamp(value_int,0,255);
-          // printf(" : %d\n", config.ball_b);
-          break;
-        case 17:
-          config.brick_r = Clamp(value_int,0,255);
-          // printf(" : %d\n", config.brick_r);
-          break;
-        case 18:
-          config.brick_g = Clamp(value_int,0,255);
-          // printf(" : %d\n", config.brick_g);
-          break;
-        case 19:
-          config.brick_b = Clamp(value_int,0,255);
-          // printf(" : %d\n", config.brick_b);
-          break;
-        default:
-          break;
-      }
-      ++i;
-    }
-
+float Clamp(float value, float min, float max){
+  if (value < min) {
+    return min;
   }
-  config_file.close();
+  if (value > max) {
+    return max;
+  }
+  return value;
+}
+
+bool Game::ReadConfig(){
+  sqlite3 *db;
+
+  int rc;
+  rc = sqlite3_open("../data/configuration.db", &db);
+  if( rc ) {
+    return false;
+  }
+
+  char *sql_stmt = "SELECT id, Width, Height, Speed, Red, Green, Blue FROM PlatformBall WHERE id = 'Ball'";
+  sqlite3_stmt *stmt;
+
+  sqlite3_prepare(db, sql_stmt, -1, &stmt, NULL);
+
+  sqlite3_step(stmt);
+
+  config.ball_width = Clamp((float)sqlite3_column_double(stmt,1),5.0f,20.0f);
+  config.ball_height = Clamp((float)sqlite3_column_double(stmt,2),5.0f,20.0f);
+  config.ball_speed = Clamp((float)sqlite3_column_double(stmt,3),1.0f,20.0f);
+
+  config.ball_r = Clamp(sqlite3_column_int(stmt,4),0,255);
+  config.ball_g = Clamp(sqlite3_column_int(stmt,5),0,255);
+  config.ball_b = Clamp(sqlite3_column_int(stmt,6),0,255);
+
+  sqlite3_finalize(stmt);
+
+  sql_stmt = "SELECT id, Width, Height, Speed, Red, Green, Blue FROM PlatformBall WHERE id = 'Platform'";
+
+  sqlite3_prepare(db, sql_stmt, -1, &stmt, NULL);
+
+  sqlite3_step(stmt);
+
+  config.platform_width = Clamp((float)sqlite3_column_double(stmt,1),5.0f,20.0f);
+  config.platform_height = Clamp((float)sqlite3_column_double(stmt,2),5.0f,20.0f);
+  config.platform_speed = Clamp((float)sqlite3_column_double(stmt,3),1.0f,20.0f);
+
+  config.platform_r = Clamp(sqlite3_column_int(stmt,4),0,255);
+  config.platform_g = Clamp(sqlite3_column_int(stmt,5),0,255);
+  config.platform_b = Clamp(sqlite3_column_int(stmt,6),0,255);
+
+  sqlite3_finalize(stmt);
+
+  sql_stmt = "SELECT Rows, Cols, Start, End, OffsetX, OffsetY, Red, Green, Blue FROM Bricks";
+  sqlite3_prepare(db, sql_stmt, -1, &stmt, NULL);
+
+  sqlite3_step(stmt);
+
+  config.brick_rows = Clamp(sqlite3_column_int(stmt,0),3,20);
+  config.brick_cols = Clamp(sqlite3_column_int(stmt,1),2,15);
+
+  config.brick_spawn_start = Clamp(sqlite3_column_int(stmt,2),0,100);
+  config.brick_spawn_end = Clamp(sqlite3_column_int(stmt,3), config.brick_spawn_start, 500);
+
+  config.brick_offset_x = Clamp((float)sqlite3_column_double(stmt,4),0.0f,10.0f);
+  config.brick_offset_y = Clamp((float)sqlite3_column_double(stmt,5),0.0f,10.0f);
+
+  config.brick_r = Clamp(sqlite3_column_int(stmt,6),0,255);
+  config.brick_g = Clamp(sqlite3_column_int(stmt,7),0,255);
+  config.brick_b = Clamp(sqlite3_column_int(stmt,8),0,255);
+
+  sqlite3_finalize(stmt);
   
+  if (sqlite3_close(db) != SQLITE_OK) {
+    return false;
+  }
+
+  return true;
 }
 
 bool Game::IsInsideHitbox(hitbox item, float x, float y){
@@ -148,10 +119,11 @@ bool Game::Collision(hitbox first_item, hitbox second_item){
 
 void Game::BuildBricks(sf::Vector2u window_size){
 
-  sf::Vector2f position = sf::Vector2f(config.brick_offset,config.brick_spawn_start);
+  sf::Vector2f position = sf::Vector2f(config.brick_offset_x,config.brick_spawn_start);
   
   float size_y = (config.brick_spawn_end - config.brick_spawn_start) / config.brick_rows;
-  float size_x = (window_size.x - (config.brick_offset * config.brick_cols)) / config.brick_cols;
+  float size_x = (window_size.x - (config.brick_offset_x * config.brick_cols)) / config.brick_cols;
+
   sf::Vector2f size = sf::Vector2f(size_x,size_y);
   
   sf::RectangleShape shape(size);
@@ -160,7 +132,7 @@ void Game::BuildBricks(sf::Vector2u window_size){
   for (int i = 0; i < config.brick_rows; i++) {
     for (int f = 0; f < config.brick_cols; f++) {
       if (f != 0) {
-        position.x += size.x + config.brick_offset;
+        position.x += size.x + config.brick_offset_x;
       }
       
       shape.setPosition(position);
@@ -169,8 +141,8 @@ void Game::BuildBricks(sf::Vector2u window_size){
       brick_list.addBrick(building_brick);
       
     }
-    position.x = config.brick_offset;
-    position.y += size.y + config.brick_offset;
+    position.x = config.brick_offset_x;
+    position.y += size.y + config.brick_offset_y;
   }
   
 }
@@ -193,7 +165,7 @@ void Game::InitBall(){
   
   ball = BallClass(shape,sf::Vector2i(1,-1),config.ball_speed);
 
-  printf("ball-> %f\n",ball.getShape().getPosition().y);
+  // printf("ball-> %f\n",ball.getShape().getPosition().y);
 }
 
 void Game::BallBricksCollision(){

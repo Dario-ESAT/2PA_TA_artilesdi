@@ -45,7 +45,7 @@ class Game {
 
   void CheckLoss();
 
-  void ReadConfig();
+  bool ReadConfig();
 };
 
 #endif

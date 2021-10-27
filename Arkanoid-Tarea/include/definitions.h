@@ -17,7 +17,8 @@ struct hitbox {
 struct Config {
   int brick_rows;
   int brick_cols;
-  int brick_offset;
+  float brick_offset_x;
+  float brick_offset_y;
   int brick_spawn_start;
   int brick_spawn_end;
 

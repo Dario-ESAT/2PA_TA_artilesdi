@@ -16,7 +16,7 @@ BrickNode::BrickNode(Brick data){
 
 BrickNode::~BrickNode(){
   if (next != nullptr) {
-    next->~BrickNode();
+    delete next;
   }
 }
 
@@ -25,7 +25,7 @@ BrickList::BrickList() {
 }
 
 BrickList::~BrickList() {
-  head->~BrickNode();
+  delete head;
 };
 
 BrickNode* BrickList::getHead() {
