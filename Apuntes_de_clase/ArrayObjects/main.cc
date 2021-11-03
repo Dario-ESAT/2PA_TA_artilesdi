@@ -1,31 +1,15 @@
 #include <stdio.h>
 
-class Car {
-public:
-  int doors_;
-  float gas_;
-  Car();
-  ~Car();
-  void Innit(int doors, float gas);
-};
+#include "car.h"
+#include "plane.h"
+#include "motorbike.h"
 
-void Car::Innit(int doors, float gas){
-  doors_ = doors;
-  gas_ = gas;
-}
-Car::Car() {
+const int kNumeroDeCoches = 10;
 
-}
-
-Car::~Car(){
-  printf("Borrado Car\n");
-}
-
-const int numero_de_coches = 10;
 void ArrayDeCars(){
-  Car coches[numero_de_coches];
+  Car coches[kNumeroDeCoches];
 
-  for (int i = 0; i < numero_de_coches; i++) {
+  for (int i = 0; i < kNumeroDeCoches; i++) {
     if (i % 6 == 0){
       coches[i].Innit(3,10);
     } else {
@@ -33,9 +17,10 @@ void ArrayDeCars(){
 
     }
   }
-  for (int i = 0; i < numero_de_coches; i++) {
+  for (int i = 0; i < kNumeroDeCoches; i++) {
     printf("Coche :%d Ruedas:%d Listros:%.3f\n",i, coches[i].doors_, coches[i].gas_);
   }
+
 }
 
 void PunteroDeCars(){
@@ -57,22 +42,41 @@ void PunteroDeCars(){
 }
 
 void ArrayDeCarsConNew(){
-  Car *coches = new Car[numero_de_coches];
+  Car *coches[kNumeroDeCoches];
   
-  for (int i = 0; i < numero_de_coches; i++) {
-    if (i % 6 == 0){
-      coches[i].Innit(3,10);
-    } else {
-      coches[i].Innit(4,5.8f);
+  for (int i = 0; i < kNumeroDeCoches; i++) {
+    coches[i] = new Car();
+  }
 
+  for (int i = 0; i < kNumeroDeCoches; i++) {
+    if (i % 6 == 0){
+      coches[i]->Innit(3,10);
+    } else {
+      coches[i]->Innit(4,5.8f);
     }
   }
+
+  for (int i = 0; i < kNumeroDeCoches; i++) {
+    printf("Coche :%d Ruedas:%d Listros:%.3f\n",i, coches[i]->doors_, coches[i]->gas_);
+  }
+
+}
+
+void EjemploHerencia(){
+  Car *coche = new Car();
+  MotorBike *moto = new MotorBike();
+  Plane *avion = new Plane();
+
+  delete coche;
+  delete moto;
+  delete avion;
 }
 
 int main(){
 
   // ArrayDeCars();
-  PunteroDeCars();
-
+  // PunteroDeCars();
+  // ArrayDeCarsConNew();
+  EjemploHerencia();
   return 0;
 }
