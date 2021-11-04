@@ -11,9 +11,9 @@ void ArrayDeCars(){
 
   for (int i = 0; i < kNumeroDeCoches; i++) {
     if (i % 6 == 0){
-      coches[i].Innit(3,10);
+      coches[i].init(3,10);
     } else {
-      coches[i].Innit(4,5.8f);
+      coches[i].init(4,5.8f);
 
     }
   }
@@ -28,9 +28,9 @@ void PunteroDeCars(){
   Car *coche2 = new Car();
   Car *coche3 = new Car();
 
-  coche1->Innit(2,6.4f);
-  coche2->Innit(5,41.4f);
-  coche3->Innit(3,23.5f);
+  coche1->init(2,6.4f);
+  coche2->init(5,41.4f);
+  coche3->init(3,23.5f);
 
   printf("Coche :%d Ruedas:%d Listros:%.3f\n",1, coche1->doors_, coche1->gas_);
   printf("Coche :%d Ruedas:%d Listros:%.3f\n",2, coche2->doors_, coche2->gas_);
@@ -50,9 +50,9 @@ void ArrayDeCarsConNew(){
 
   for (int i = 0; i < kNumeroDeCoches; i++) {
     if (i % 6 == 0){
-      coches[i]->Innit(3,10);
+      coches[i]->init(3,10);
     } else {
-      coches[i]->Innit(4,5.8f);
+      coches[i]->init(4,5.8f);
     }
   }
 

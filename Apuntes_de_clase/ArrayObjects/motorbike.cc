@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include "motorbike.h"
 
-void MotorBike::Innit(float gas){
+void MotorBike::init(float gas){
   gas_ = gas;
   planted_ = true;
 }
 
-void MotorBike::Innit(){
+void MotorBike::init(){
   gas_ = 0;
   planted_ = true;
 }
@@ -22,7 +22,6 @@ MotorBike::MotorBike() {
 
 MotorBike::MotorBike(const MotorBike& mb) {
   planted_ = mb.planted_;
-  gas_ = mb.gas_;
 }
 
 MotorBike::~MotorBike() {

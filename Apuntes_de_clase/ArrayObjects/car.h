@@ -11,9 +11,9 @@ public:
   Car(const Car& c);
   ~Car();
 
-  void Innit(int doors, float gas);
-  void Innit(float gas);
-  void Innit();
+  void init(int doors, float gas);
+  void init(float gas);
+  void init();
   
   
   void virtual openDoors();

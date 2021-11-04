@@ -8,8 +8,8 @@ public:
   MotorBike(const MotorBike& mb);
   ~MotorBike();
   
-  void Innit(float gas);
-  void Innit();
+  void init(float gas);
+  void init();
   
   void plantFoot(bool f);
 

@@ -1,22 +1,19 @@
 #include <stdio.h>
 #include "plane.h"
 
-void Plane::Innit(int doors, float gas){
-  doors_ = doors;
-  gas_ = gas;
-  open_ = true;
+void Plane::init(int doors, float gas){
+  Car::init(doors,gas);
+  gear_ = false;
 }
 
-void Plane::Innit(float gas){
-  doors_ = 3;
-  gas_ = gas;
-  open_ = true;
+void Plane::init(float gas){
+  Car::init(gas);
+  gear_ = false;
 }
 
-void Plane::Innit(){
-  doors_ = 3;
-  gas_ = 0;
-  open_ = true;
+void Plane::init(){
+  Car::init();
+  gear_ = false;
 }
 
 void Plane::pullGear() {
@@ -40,9 +37,6 @@ Plane::Plane() {
 
 Plane::Plane(const Plane& p) {
   gear_ = p.gear_;
-  gas_ = p.gas_;
-  doors_ = p.doors_;
-  open_ = p.open_;
 }
 
 Plane::~Plane() {
